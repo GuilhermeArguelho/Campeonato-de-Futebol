@@ -5,7 +5,7 @@ Guilherme Arguelho, João Bomfim
 */
 import java.util.Scanner;
 
-public class Main {
+public class copia {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -48,10 +48,10 @@ public class Main {
         
         String result[] = new String [qtdJogos];
         int mat[][] = new int [qtdTimes][5];
-        int[][] matAux = new int [qtdTimes][5]; 
+        int[][] matAux = new int [qtdTimes][6];  
         int valores1[] = new int[5];
         int valores2[] = new int[5];
-        String[] nomeTime2 = {" "};
+        String[] nomeTime2 = new String[qtdTimes];
         System.out.println("Informe os resultados: nomeDoTime1_golsDoTime1@golsDoTime2_nomeDoTime2");
             for (int j = 0; j < result.length; j++){
               int cont = 0;
@@ -79,6 +79,8 @@ public class Main {
                   placar = nomeTimeRes[1].split("@");
                 }
               } while(cont < 3 || nomeTimeRes[0].equals(nomeTimeRes[2])); // vai pedir o resultado novamente caso nome não esteja na lista ou os times sejam iguais
+              
+              
 
               // TIME 1 
               if(Integer.parseInt(placar[0]) > Integer.parseInt(placar[1])) { //vitoria do time 1 e derrota do time 2
@@ -143,48 +145,34 @@ public class Main {
                 mat[h][1] += valores2[1];
                 mat[h][2] += valores2[2];
                 mat[h][3] += valores2[3];
-                mat[h][4] += valores2[4];         
-
-
-                matAux = mat;    
-                int[][] mat2 = new int[5][qtdTimes]; 
+                mat[h][4] += valores2[4];      
                 
-                int v = 0;
-                for(int n = 0; n < qtdTimes; n++){  // vetor para armazenar todos os pontos de todos os times
-                    mat2[0][n]=matAux[n][0];  
-                    mat2[1][n]=matAux[n][1];  
-                    mat2[2][n]=matAux[n][2];  
-                    mat2[3][n]=matAux[n][3];  
-                    mat2[4][n]=matAux[n][4];                 
-                            
-                }   
-               
+             
+            
+            int[] vetor = new int[qtdTimes]; 
+            int v = 0, aux;
+
+                for(int n = 0; n < matAux.length; n++){  // vetor para armazenar todos os pontos de todos os times
+                  vetor[v]=matAux[n][0];   
+                  v++;        
+                
+            }    
               nomeTime2 = nomeTime; 
               String auxnome; 
-              int[] aux = new int [5];
-              for (int m=0; m < 5; m++) {
-                for (int n=0; n < qtdTimes-1; n++) {  // ordena as posições da matriz (troca simultaneamente as posiçoes dos pontos e a posição dos times)
-                    if (mat2[0][n] < mat2[0][n+1]) {
-                      aux[n] = mat2[m][n+1]; 
-                      auxnome = nomeTime2[n+1];
-                      mat2[m][n+1] = mat2[m][n];
-                      nomeTime2[n+1] = nomeTime2[n];
-                      mat2[m][n] = aux[n];
-                      nomeTime2[n] = auxnome;
-                    }              
-                  
-                }
+              for (int n=0; n < qtdTimes-1; n++) {  // ordena as posições da matriz (troca simultaneamente as posiçoes dos pontos e a posição dos times)
+                if (vetor[n] < vetor[n+1]) {
+                  aux = vetor[n+1]; 
+                  auxnome = nomeTime2[n+1];
+                  vetor[n+1] = vetor[n];
+                  nomeTime2[n+1] = nomeTime2[n];
+                  vetor[n] = aux;
+                  nomeTime2[n] = auxnome;
+                }              
               }
-                
-              
-              for(int m = 0; m < qtdTimes; m++){
-                for(int n = 0; n < 5; n++) { // coloca na matriz ordenados por quem fez mais pontos
-                    matAux[n][m] = mat2[m][n];
-                  }
-              }
-              
-  
 
+              for(int n = 0; n < qtdTimes; n++) { //coloca na matriz ordenados por quem fez mais pontos
+                mat[n][0] = vetor[n];
+              }
             }
 
             System.out.println();
@@ -197,7 +185,10 @@ public class Main {
                 System.out.print(mat[m][3] + " gols sofridos | ");
                 System.out.print(" saldo de gols: " + mat[m][4] );
                 System.out.println();
-            }                 
+            }     
+
+            
+            
 
             System.out.println();
             System.out.println(nomeCamp);
@@ -245,8 +236,4 @@ public class Main {
   public static void tabela(String nomeCamp, String v[]) {
     System.out.println();
   }
-
-  public static void name() {
-    
-  }
-}           
+}      
