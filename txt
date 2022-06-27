@@ -4,7 +4,6 @@ Linguagem de Programação I - 179
 Guilherme Arguelho, João Bomfim
 */
 import java.util.Scanner;
-
 public class App {
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
@@ -37,15 +36,16 @@ public class App {
         //System.out.println("Informe a quantidade de jogos: ");
         qtdJogos = sc.nextInt();
         sc.nextLine();
-        //if(qtdJogos <= 0) {
-        //    System.out.println("Quantidade inválida: ");
-        //}
+        if(qtdJogos <= 0) {
+            //System.out.println("Quantidade inválida: ");
+        }
     } while(qtdJogos <= 0);
     
     String result[] = new String [qtdJogos];
     int valores[] = new int[5]; // vetor que vai guardar as pontuações do primeiro time da partida
     int todosValores[][] = new int [qtdTimes][5]; // matriz que vai acumular pontuação de todos os times
     int aux[][] = new int [qtdTimes][5];
+    String auxNomeTime[] = new String[qtdTimes];
     //System.out.println("Informe os resultados: nomeDoTime1_golsDoTime1@golsDoTime2_nomeDoTime2");
     for(int j = 0; j < result.length; j++) {
       int cont = 0;
@@ -66,7 +66,7 @@ public class App {
           }
         }
         if(cont == 0 || cont == 1 || cont == 2 || nomeTimeRes[0].equals(nomeTimeRes[2])) { // se um ou dois tiverem errados ele executa
-          //System.out.println("Resultado inválido! Informe novamente: ");
+          System.out.println("Resultado inválido! Informe novamente: ");
           result[j] = sc.nextLine();
           nomeTimeRes = result[j].split("_");
           placar = nomeTimeRes[1].split("@");
@@ -140,60 +140,40 @@ public class App {
             }
           }
         }
-      } 
-
-      for(int m = 0; m < qtdTimes; m++) {
-        System.out.print(nomeTime[m] + " | ");
-        System.out.print(todosValores[m][0] + " pontos | ");
-        System.out.print(todosValores[m][1] + " vitória(s) | ");               
-        System.out.print(todosValores[m][2] + " gols marcados | ");
-        System.out.print(todosValores[m][3] + " gols sofridos | ");
-        System.out.print(" saldo de gols: " + todosValores[m][4] );
-        System.out.println();
       }
-
     }
 
-    int maiorPonto = -1;
-    int maiorVitoria = -1;
-    int maiorSaldoGols = 0;
-    int menorGolsSofridos = -1;
-
+    int maiorPonto = 0;
+    //int maiorVitoria = 0;
+    //int maiorSaldoGols = 0;
+    //int menorGolsSofridos = 0;
     for(int m = 0; m < qtdTimes; m++) { // linhas da matriz
       for(int n = 0; n < 5; n++) { // colunas da matriz
-        for(int o = 0; o < qtdTimes; o++) {
+        for(int o = 0; o < qtdTimes; o++) { // percorrer as linhas da matriz procurando pelo maior
+          //maiorPonto = todosValores[m][0];
           for(int p = 0; p < 5; p++) {
-            if(todosValores[o][0] > maiorPonto) {
-              maiorPonto = todosValores[o][0];
-              aux[m][p] = todosValores[o][p];
-            } else if(todosValores[o][0] == maiorPonto && todosValores[o][1] > maiorVitoria) {
-              maiorVitoria = todosValores[o][1];
-              aux[m][p] = todosValores[o][p];
-            } else if(todosValores[o][0] == maiorPonto && todosValores[o][1] == maiorVitoria && todosValores[o][4] > maiorSaldoGols) {
-              maiorSaldoGols = todosValores[o][4];
-              aux[m][p] = todosValores[o][p];
-            } else if(todosValores[o][0] == maiorPonto && todosValores[o][1] == maiorVitoria && todosValores[o][4] == maiorSaldoGols && todosValores[o][3] < menorGolsSofridos) {
-              menorGolsSofridos = todosValores[o][3];
-              aux[m][p] = todosValores[o][p];
+            if(todosValores[o][0] >= maiorPonto) {
+              for(int q = 0; q < 5; q++) {
+                if(aux[m][0] > maiorPonto){
+                  maiorPonto = todosValores[o][0];
+                  aux[m][q] = todosValores[o][q];
+                  //auxNomeTime[m] = nomeTime[o];
+                } else {
+                    for(q = 0; q < 5; q++) {
+                        aux[m][q] = todosValores[o][q];
+                        //auxNomeTime[m] = nomeTime[o]
+                    }
+                }
+              }
             }
           }
         }
       }
     }
-
-    for(int m = 0; m < qtdTimes; m++) {
-      System.out.print(nomeTime[m] + " | ");
-      System.out.print(aux[m][0] + " pontos | ");
-      System.out.print(aux[m][1] + " vitória(s) | ");               
-      System.out.print(aux[m][2] + " gols marcados | ");
-      System.out.print(aux[m][3] + " gols sofridos | ");
-      System.out.print(" saldo de gols: " + aux[m][4] );
-      System.out.println();
-    }
-    
+    tabela(nomeCamp, nomeTime, todosValores, qtdTimes); // imprime o placar sem estar ordenada
   }
-  public static Boolean verificarNomeTime(String nomeTime){
-    char g[] = nomeTime.toCharArray();
+  public static Boolean verificarNomeTime(String n){
+    char g[] = n.toCharArray();
     boolean verifica = false;
     for (int i = 0; i < g.length; i++) {
       if(g[i] >= 33 && g[i] <= 47 || g[i] >= 58 && g[i] <= 64 || g[i] >= 91 && g[i] <= 96 || g[i] >= 123 && g[i] <= 255) {
@@ -218,4 +198,16 @@ public class App {
     }
     return n;
   }
-}           
+  public static void tabela(String nomeCamp, String[] nomeTime, int[][] mat, int qtd) {
+    System.out.println(nomeCamp);
+    for(int m = 0; m < qtd; m++) {
+      System.out.print(nomeTime[m] + " | ");
+      System.out.print(mat[m][0] + " pontos | ");
+      System.out.print(mat[m][1] + " vitória(s) | ");               
+      System.out.print(mat[m][2] + " gols marcados | ");
+      System.out.print(mat[m][3] + " gols sofridos | ");
+      System.out.print(" saldo de gols: " + mat[m][4] );
+      System.out.println();
+    }
+  }
+}

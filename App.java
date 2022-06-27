@@ -17,21 +17,21 @@ public class App {
     //System.out.println("Escreva o nome dos " + qtdTimes + " times: ");
     String[] nomeTime = new String[qtdTimes];
     sc.nextLine();
-    for(int i = 0; i < qtdTimes; i++) {
-      nomeTime[i] = sc.nextLine();
-      while(nomeTime.length > 20) {
+    for (int i = 0; i < qtdTimes; i++){
         nomeTime[i] = sc.nextLine();
-        //System.out.println("Nome muito grande, insira outro de no máximo 20 carac: ");
-      }
-      
-      boolean c = verificarNomeTime(nomeTime[i]);
-      while (c == true){
-        //System.out.print("Nome inválido, insira outro: ");
-        nomeTime[i] = sc.nextLine();
-        c = verificarNomeTime(nomeTime[i]);
-      }
+        while(nomeTime.length > 20) {
+            nomeTime[i] = sc.nextLine();
+            //System.out.println("Nome muito grande, insira outro de no máximo 20 carac: ");
+        }
+        
+        boolean c = verificarNomeTime(nomeTime[i]);
+        while (c == true){
+            //System.out.print("Nome inválido, insira outro: ");
+            nomeTime[i] = sc.nextLine();
+            c = verificarNomeTime(nomeTime[i]);
+        }
     } 
-    
+
     do {
         //System.out.println("Informe a quantidade de jogos: ");
         qtdJogos = sc.nextInt();
@@ -42,12 +42,14 @@ public class App {
     } while(qtdJogos <= 0);
     
     String result[] = new String [qtdJogos];
-    int valores[] = new int[5]; // vetor que vai guardar as pontuações do primeiro time da partida
-    int todosValores[][] = new int [qtdTimes][5]; // matriz que vai acumular pontuação de todos os times
-    int aux[][] = new int [qtdTimes][5];
-    String auxNomeTime[] = new String[qtdTimes];
+    int mat[][] = new int [qtdTimes][5];
+    int mat2[][] = new int[5][qtdTimes];
+    int matAux[][] = new int [qtdTimes][5]; 
+    int valores[] = new int[5];
+    String[] nomeTime2 = {" "};
+
     //System.out.println("Informe os resultados: nomeDoTime1_golsDoTime1@golsDoTime2_nomeDoTime2");
-    for(int j = 0; j < result.length; j++) {
+    for (int j = 0; j < result.length; j++){
       int cont = 0;
       result[j] = sc.nextLine();
       String nomeTimeRes[] = result[j].split("_");
@@ -65,13 +67,13 @@ public class App {
             cont++; // se cont for +1 significa que o nome do time esta na array
           }
         }
-        if(cont == 0 || cont == 1 || cont == 2 || nomeTimeRes[0].equals(nomeTimeRes[2])) { // se um ou dois tiverem errados ele executa
-          System.out.println("Resultado inválido! Informe novamente: ");
+        if(cont < 3 || nomeTimeRes[0].equals(nomeTimeRes[2])) { // se um ou dois tiverem errados ele executa
+          //System.out.println("Resultado inválido! Informe novamente: ");
           result[j] = sc.nextLine();
           nomeTimeRes = result[j].split("_");
           placar = nomeTimeRes[1].split("@");
         }
-      } while(cont == 0 || cont == 1 || cont == 2 || nomeTimeRes[0].equals(nomeTimeRes[2])); // vai pedir o resultado novamente caso nome não esteja na lista ou os times sejam iguais
+      } while(cont < 3 || nomeTimeRes[0].equals(nomeTimeRes[2])); // vai pedir o resultado novamente caso nome não esteja na lista ou os times sejam iguais
 
       if(Integer.parseInt(placar[0]) > Integer.parseInt(placar[1])) { // vitoria primeiro time
         valores[0] = 3; //pontos
@@ -82,7 +84,7 @@ public class App {
         for(int w = 0; w < nomeTime.length; w++){
           if(nomeTime[w].equals(nomeTimeRes[0])){
             for(int x = 0; x < 5; x++){
-              todosValores[w][x] += valores[x];
+              mat[w][x] += valores[x];
             }
           }
         }
@@ -95,7 +97,7 @@ public class App {
         for(int w = 0; w < nomeTime.length; w++){
           if(nomeTime[w].equals(nomeTimeRes[0])){
             for(int x = 0; x < 5; x++){
-              todosValores[w][x] += valores[x];
+              mat[w][x] += valores[x];
             }
           }
         }
@@ -109,7 +111,7 @@ public class App {
         for(int w = 0; w < nomeTime.length; w++){
           if(nomeTime[w].equals(nomeTimeRes[2])){
             for(int x = 0; x < 5; x++){
-              todosValores[w][x] += valores[x];
+              mat[w][x] += valores[x];
             }
           }
         }
@@ -122,7 +124,7 @@ public class App {
         for(int w = 0; w < nomeTime.length; w++){
           if(nomeTime[w].equals(nomeTimeRes[2])){
             for(int x = 0; x < 5; x++){
-              todosValores[w][x] += valores[x];
+              mat[w][x] += valores[x];
             }
           }
         }
@@ -136,67 +138,77 @@ public class App {
         for(int w = 0; w < nomeTime.length; w++){
           if(nomeTime[w].equals(nomeTimeRes[0]) || nomeTime[w].equals(nomeTimeRes[2])){
             for(int x = 0; x < 5; x++){
-              todosValores[w][x] += valores[x];
+              mat[w][x] += valores[x];
             }
           }
         }
-      } 
-    }
+      }       
 
-    int maiorPonto = 0;
-    //int maiorVitoria = 0;
-    //int maiorSaldoGols = 0;
-    //int menorGolsSofridos = 0;
-    for(int m = 0; m < qtdTimes; m++) { // linhas da matriz
-      for(int n = 0; n < 5; n++) { // colunas da matriz
-        for(int o = 0; o < qtdTimes; o++) { // percorrer as linhas da matriz procurando pelo maior
-          //maiorPonto = todosValores[m][0];
-          for(int p = 0; p < 5; p++) {
-            if(todosValores[o][0] >= maiorPonto) {
-              for(int q = 0; q < 5; q++) {
-                if(aux[m][0] > maiorPonto){
-                  maiorPonto = todosValores[o][0];
-                  aux[m][q] = todosValores[o][q];
-                  //auxNomeTime[m] = nomeTime[o];
-                } else {
-                    for(q = 0; q < 5; q++) {
-                        aux[m][q] = todosValores[o][q];
-                        //auxNomeTime[m] = nomeTime[o]
-                    }
-                }
-              }
-            }
-          }
+      matAux = mat;     
+      
+      for(int n = 0; n < qtdTimes; n++){  // vetor para armazenar todos os pontos de todos os times
+        mat2[0][n] = matAux[n][0];
+        mat2[1][n] = matAux[n][1];
+        mat2[2][n] = matAux[n][2];
+        mat2[3][n] = matAux[n][3];
+        mat2[4][n] = matAux[n][4];     
+      }   
+        
+      nomeTime2 = nomeTime; 
+      String auxNome;
+
+      int[] aux = new int [5];
+      for (int m=0; m < 5; m++) {
+        for (int n=0; n < qtdTimes-1; n++) {  // ordena as posições da matriz (troca simultaneamente as posiçoes dos pontos e a posição dos times)
+          if (mat2[0][n] < mat2[0][n+1]) {
+            aux[n] = mat2[m][n+1]; 
+            auxNome = nomeTime2[n+1];
+            mat2[m][n+1] = mat2[m][n];
+            nomeTime2[n+1] = nomeTime2[n];
+            mat2[m][n] = aux[n];
+            nomeTime2[n] = auxNome;
+          }              
+        }
+      }
+      for(int m = 0; m < qtdTimes; m++){
+        for(int n = 0; n < 5; n++) { // coloca na matriz ordenados por quem fez mais pontos
+          matAux[m][n] = mat2[n][m];
         }
       }
     }
-    tabela(nomeCamp, nomeTime, todosValores, qtdTimes); // imprime o placar sem estar ordenada
+    //tabela(nomeCamp, nomeTime, mat, qtdTimes); // imprime o placar sem estar ordenada
+    tabela(nomeCamp, nomeTime2, matAux, qtdTimes); // imprime o placar ordenado            
   }
-  public static Boolean verificarNomeTime(String n){
-    char g[] = n.toCharArray();
-    boolean verifica = false;
-    for (int i = 0; i < g.length; i++) {
-      if(g[i] >= 33 && g[i] <= 47 || g[i] >= 58 && g[i] <= 64 || g[i] >= 91 && g[i] <= 96 || g[i] >= 123 && g[i] <= 255) {
-        verifica = true;
-      } 
-    }
-    return verifica;
+
+  public static Boolean verificarNomeTime(String nomeTime){
+      char g[] = nomeTime.toCharArray();
+      boolean verifica = false;
+      int cont = 0;
+      for (int i = 0; i < g.length; i++) {
+          if(g[i] >= 33 && g[i] <= 47 || g[i] >= 58 && g[i] <= 64 || g[i] >= 91 && g[i] <= 96 || g[i] >= 123 && g[i] <= 255) {
+              cont++;
+          }
+          if(cont > 0) {
+            verifica = true;
+          }
+      }
+      return verifica;
   }
   public static String verificarNomeCampeonato(String a) {
-    Scanner sc = new Scanner(System.in);
-    while(a.length() > 100){
-      //System.out.println("Nome ultrapassou o limite de 100 caracteres, insira outro: ");
-      a = sc.nextLine();
-    }
-    return a;
+      Scanner sc = new Scanner(System.in);
+      while(a.length() > 100){
+          System.out.println("Nome ultrapassou o limite de 100 caracteres, insira outro: ");
+          a = sc.nextLine();
+      }
+      return a;
   }
   public static int verificarQtdTimes(int n) {
-    Scanner sc = new Scanner(System.in);
-    while (n < 2 || n > 20){
-      //System.out.println("Quantidade inválida de times. Insira outra: ");
-      n = sc.nextInt();
-    }
-    return n;
+      Scanner sc = new Scanner(System.in);
+      while (n < 2 || n > 20){
+          System.out.println("Quantidade inválida de times. Insira outra: ");
+          n = sc.nextInt();
+      }
+      return n;
   }
   public static void tabela(String nomeCamp, String[] nomeTime, int[][] mat, int qtd) {
     System.out.println(nomeCamp);
@@ -210,4 +222,4 @@ public class App {
       System.out.println();
     }
   }
-}
+}           
