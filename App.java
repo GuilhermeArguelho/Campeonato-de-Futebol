@@ -49,6 +49,7 @@ public class App {
     int valores[] = new int[5]; // vetor que vai guardar as pontuações do primeiro time da partida
     int todosValores[][] = new int [qtdTimes][5]; // matriz que vai acumular pontuação de todos os times
     int aux[][] = new int [qtdTimes][5];
+    String auxNomeTime[] = new String[qtdTimes];
 
     System.out.println("Informe os resultados: nomeDoTime1_golsDoTime1@golsDoTime2_nomeDoTime2");
     for(int j = 0; j < result.length; j++) {
@@ -146,16 +147,7 @@ public class App {
         }
       } 
 
-      for(int m = 0; m < qtdTimes; m++) {
-        System.out.print(nomeTime[m] + " | ");
-        System.out.print(todosValores[m][0] + " pontos | ");
-        System.out.print(todosValores[m][1] + " vitória(s) | ");               
-        System.out.print(todosValores[m][2] + " gols marcados | ");
-        System.out.print(todosValores[m][3] + " gols sofridos | ");
-        System.out.print(" saldo de gols: " + todosValores[m][4] );
-        System.out.println();
-      }
-
+      tabela(nomeCamp, nomeTime, todosValores, qtdTimes);
     }
 
     int maiorPonto = 0;
@@ -166,16 +158,18 @@ public class App {
     for(int m = 0; m < qtdTimes; m++) { // linhas da matriz
       for(int n = 0; n < 5; n++) { // colunas da matriz
         for(int o = 0; o < qtdTimes; o++) { // percorrer as linhas da matriz procurando pelo maior
-          maiorPonto = todosValores[m][0];
+          //maiorPonto = todosValores[m][0];
           for(int p = 0; p < 5; p++) {
             if(todosValores[o][0] >= maiorPonto) {
               for(int q = 0; q < 5; q++) {
-                if(aux[m][0] >= maiorPonto){
+                if(aux[m][0] > maiorPonto){
                   maiorPonto = todosValores[o][0];
                   aux[m][q] = todosValores[o][q];
+                  //auxNomeTime[m] = nomeTime[o];
                 } else {
                     for(q = 0; q < 5; q++) {
                         aux[m][q] = todosValores[o][q];
+                        //auxNomeTime[m] = nomeTime[o]
                     }
                 }
               } 
@@ -230,5 +224,17 @@ public class App {
       n = sc.nextInt();
     }
     return n;
+  }
+  public static void tabela(String nomeCamp, String[] nomeTime, int[][] mat, int qtd) {
+    System.out.println(nomeCamp);
+    for(int m = 0; m < qtd; m++) {
+      System.out.print(nomeTime[m] + " | ");
+      System.out.print(mat[m][0] + " pontos | ");
+      System.out.print(mat[m][1] + " vitória(s) | ");               
+      System.out.print(mat[m][2] + " gols marcados | ");
+      System.out.print(mat[m][3] + " gols sofridos | ");
+      System.out.print(" saldo de gols: " + mat[m][4] );
+      System.out.println();
+    }
   }
 }
